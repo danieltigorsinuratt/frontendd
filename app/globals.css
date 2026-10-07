@@ -1,26 +1,427 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg-page: #FCF8EC;
+  --bg-navbar: #FFFFFF;
+  --color-pink: #EF3B73;
+  --color-pink-hover: #D62B61;
+  --color-dark: #382B2B;
+  --color-gray-menu: #575050;
+  --color-gray-disabled: #5E5A5A;
+  --color-chip-bg: #FEEFA7;
+  --color-card-bg: #DFD7F9;
+  --color-input-bg: #FCF8ED;
+  --color-input-border: #7B6F6F;
+  --color-placeholder: #8C8282;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+html, body {
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--bg-page);
+  font-family: var(--font-fredoka), 'Fredoka', 'Baloo 2', cursive, sans-serif;
+  color: var(--color-dark);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --------------------------------------------------------------------------
+   Navbar
+   -------------------------------------------------------------------------- */
+.navbar-wrapper {
+  width: 100%;
+  background-color: var(--bg-navbar);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+  padding: 10px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-sizing: border-box;
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.navbar-brand-logo {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 2px solid #F5C968;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #FFFFFF;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.navbar-brand-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.navbar-menu {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-menu-item a {
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-gray-menu);
+  transition: color 0.15s ease;
+  padding-bottom: 2px;
+}
+
+.navbar-menu-item a:hover {
+  color: var(--color-pink);
+}
+
+.navbar-menu-item.active a {
+  color: var(--color-pink);
+  text-decoration: underline;
+  text-decoration-color: var(--color-pink);
+  text-underline-offset: 5px;
+  text-decoration-thickness: 3px;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+}
+
+.btn-keluar {
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-gray-menu);
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.btn-keluar:hover {
+  color: var(--color-pink);
+}
+
+/* --------------------------------------------------------------------------
+   Main Container
+   -------------------------------------------------------------------------- */
+.main-container {
+  width: 100%;
+  max-width: 960px;
+  margin: 32px auto;
+  padding: 0 24px 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  box-sizing: border-box;
+}
+
+/* --------------------------------------------------------------------------
+   Chip Judul Halaman
+   -------------------------------------------------------------------------- */
+.chip-title-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.chip-title {
+  display: inline-block;
+  background-color: var(--color-chip-bg);
+  color: var(--color-dark);
+  font-size: 26px;
+  font-weight: 700;
+  padding: 8px 24px;
+  border-radius: 12px;
+  line-height: 1.2;
+}
+
+/* --------------------------------------------------------------------------
+   Tombol Tambah Materi
+   -------------------------------------------------------------------------- */
+.action-bar {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  margin-bottom: 18px;
+}
+
+.btn-tambah {
+  display: inline-block;
+  background-color: var(--color-pink);
+  color: #FFFFFF;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 12px 34px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(239, 59, 115, 0.35);
+  transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+.btn-tambah:hover {
+  background-color: var(--color-pink-hover);
+  transform: translateY(-1px);
+}
+
+/* --------------------------------------------------------------------------
+   Daftar Materi (Index)
+   -------------------------------------------------------------------------- */
+.materials-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.material-card {
+  width: 100%;
+  background-color: var(--color-card-bg);
+  border-radius: 14px;
+  padding: 14px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  transition: transform 0.15s ease;
+}
+
+.material-card:hover {
+  transform: translateY(-1px);
+}
+
+.material-card-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-dark);
+}
+
+.material-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-shrink: 0;
+}
+
+.btn-action-edit {
+  font-size: 15px;
+  font-weight: 700;
+  color: #575050;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.btn-action-edit:hover {
+  color: var(--color-dark);
+}
+
+.btn-action-delete {
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-pink);
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.btn-action-delete:hover {
+  opacity: 0.8;
+}
+
+.empty-state {
+  width: 100%;
+  background-color: var(--color-card-bg);
+  border-radius: 14px;
+  padding: 28px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-dark);
+  box-sizing: border-box;
+}
+
+/* --------------------------------------------------------------------------
+   Form Card (Create & Edit)
+   -------------------------------------------------------------------------- */
+.form-card {
+  width: 100%;
+  background-color: var(--color-card-bg);
+  border-radius: 18px;
+  padding: 32px 32px 28px;
+  box-sizing: border-box;
+}
+
+.form-group {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.form-label {
+  display: block;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-dark);
+  margin-bottom: 8px;
+}
+
+.form-control {
+  width: 100%;
+  background-color: var(--color-input-bg);
+  border: 1px solid var(--color-input-border);
+  border-radius: 10px;
+  padding: 12px 18px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--color-dark);
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease;
+}
+
+.form-control::placeholder {
+  color: var(--color-placeholder);
+  font-weight: 400;
+  opacity: 1;
+}
+
+.form-control:focus {
+  border-color: var(--color-pink);
+}
+
+textarea.form-control {
+  min-height: 180px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.error-feedback {
+  display: block;
+  color: #D32F2F;
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 5px;
+}
+
+/* --------------------------------------------------------------------------
+   Tombol SIMPAN
+   -------------------------------------------------------------------------- */
+.btn-simpan {
+  width: 100%;
+  padding: 13px 20px;
+  border-radius: 10px;
+  border: none;
+  font-family: inherit;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #FFFFFF;
+  background-color: var(--color-gray-disabled);
+  cursor: not-allowed;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+  box-sizing: border-box;
+}
+
+.btn-simpan.is-active {
+  background-color: var(--color-pink);
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(239, 59, 115, 0.4);
+}
+
+.btn-simpan.is-active:hover {
+  background-color: var(--color-pink-hover);
+  transform: translateY(-1px);
+}
+
+/* --------------------------------------------------------------------------
+   Flash Message / Alert
+   -------------------------------------------------------------------------- */
+.alert-success {
+  width: 100%;
+  background-color: #E6F8ED;
+  border: 1px solid #A3E4BE;
+  color: #1E6B3B;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+}
+
+/* --------------------------------------------------------------------------
+   Responsif (Tablet / Mobile)
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  .navbar-wrapper {
+    padding: 10px 16px;
+    flex-wrap: wrap;
+    gap: 12px;
   }
-}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  .navbar-left {
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .navbar-menu {
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .navbar-menu-item a {
+    font-size: 14px;
+  }
+
+  .main-container {
+    padding: 0 14px 32px;
+    margin: 20px auto;
+  }
+
+  .chip-title {
+    font-size: 22px;
+    padding: 6px 18px;
+  }
+
+  .action-bar {
+    justify-content: stretch;
+  }
+
+  .btn-tambah {
+    width: 100%;
+    text-align: center;
+  }
+
+  .form-card {
+    padding: 20px 16px 16px;
+  }
 }
