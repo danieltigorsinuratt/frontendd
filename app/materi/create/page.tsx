@@ -2,18 +2,21 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import AuthGuard from "../../components/AuthGuard";
+import ChipTitle from "../../components/partials/ChipTitle";
 import { createMaterial } from "../../../lib/materials";
 
-export default function CreateMateriPage() {
+function CreateMateriContent() {
   const router = useRouter();
   const [judul, setJudul] = useState("");
   const [deskripsi, setDeskripsi] = useState("");
   const [errorJudul, setErrorJudul] = useState("");
   const [errorDeskripsi, setErrorDeskripsi] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const isFormValid = judul.trim() !== "" && deskripsi.trim() !== "";
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     let hasError = false;
 
@@ -34,23 +37,24 @@ export default function CreateMateriPage() {
       setErrorDeskripsi("");
     }
 
-    if (hasError) return;
+    if (hasError || isSubmitting) return;
 
-    createMaterial(judul.trim(), deskripsi.trim());
-    router.push("/?message=" + encodeURIComponent("Materi berhasil ditambahkan"));
+    setIsSubmitting(true);
+    try {
+      await createMaterial(judul.trim(), deskripsi.trim());
+      router.push("/materi?message=" + encodeURIComponent("Materi berhasil ditambahkan"));
+    } catch {
+      setErrorJudul("Gagal menyimpan materi ke database.");
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <>
-      {/* Chip Judul Halaman */}
-      <div className="chip-title-wrapper">
-        <div className="chip-title">Tambah Materi</div>
-      </div>
+      <ChipTitle title="Tambah Materi" />
 
-      {/* Form Tambah Materi */}
       <div className="form-card">
         <form onSubmit={handleSubmit}>
-          {/* Field Judul Materi */}
           <div className="form-group">
             <label htmlFor="judul" className="form-label">
               Judul Materi
@@ -71,7 +75,6 @@ export default function CreateMateriPage() {
             {errorJudul && <span className="error-feedback">{errorJudul}</span>}
           </div>
 
-          {/* Field Deskripsi */}
           <div className="form-group">
             <label htmlFor="deskripsi" className="form-label">
               Deskripsi
@@ -93,17 +96,24 @@ export default function CreateMateriPage() {
             )}
           </div>
 
-          {/* Tombol Simpan */}
           <button
             type="submit"
             id="btn-simpan"
-            className={`btn-simpan ${isFormValid ? "is-active" : ""}`}
-            disabled={!isFormValid}
+            className={`btn-simpan ${isFormValid && !isSubmitting ? "is-active" : ""}`}
+            disabled={!isFormValid || isSubmitting}
           >
-            SIMPAN
+            {isSubmitting ? "MENYIMPAN..." : "SIMPAN"}
           </button>
         </form>
       </div>
     </>
+  );
+}
+
+export default function CreateMateriPage() {
+  return (
+    <AuthGuard>
+      <CreateMateriContent />
+    </AuthGuard>
   );
 }

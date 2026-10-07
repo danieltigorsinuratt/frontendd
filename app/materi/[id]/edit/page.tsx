@@ -2,7 +2,11 @@
 
 import { useEffect, useState, use, Suspense } from "react";
 import { useRouter } from "next/navigation";
-import { getStoredMaterials, updateMaterial } from "../../../../lib/materials";
+import Link from "next/link";
+import AuthGuard from "../../../components/AuthGuard";
+import ChipTitle from "../../../components/partials/ChipTitle";
+import EmptyState from "../../../components/partials/EmptyState";
+import { getMaterialById, updateMaterial } from "../../../../lib/materials";
 
 function EditMateriContent({
   params,
@@ -17,22 +21,23 @@ function EditMateriContent({
   const [errorDeskripsi, setErrorDeskripsi] = useState("");
   const [notFound, setNotFound] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    const list = getStoredMaterials();
-    const item = list.find((m) => m.id === resolvedParams.id);
-    if (item) {
-      setJudul(item.judul);
-      setDeskripsi(item.deskripsi);
-    } else {
-      setNotFound(true);
-    }
-    setLoading(false);
+    getMaterialById(resolvedParams.id).then((item) => {
+      if (item) {
+        setJudul(item.judul);
+        setDeskripsi(item.deskripsi);
+      } else {
+        setNotFound(true);
+      }
+      setLoading(false);
+    });
   }, [resolvedParams.id]);
 
   const isFormValid = judul.trim() !== "" && deskripsi.trim() !== "";
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     let hasError = false;
 
@@ -53,31 +58,36 @@ function EditMateriContent({
       setErrorDeskripsi("");
     }
 
-    if (hasError) return;
+    if (hasError || isSubmitting) return;
 
-    updateMaterial(resolvedParams.id, judul.trim(), deskripsi.trim());
-    router.push("/?message=" + encodeURIComponent("Materi berhasil diperbarui"));
+    setIsSubmitting(true);
+    try {
+      const updated = await updateMaterial(resolvedParams.id, judul.trim(), deskripsi.trim());
+      if (updated) {
+        router.push("/materi?message=" + encodeURIComponent("Materi berhasil diperbarui"));
+      } else {
+        setErrorJudul("Gagal memperbarui data materi.");
+        setIsSubmitting(false);
+      }
+    } catch {
+      setErrorJudul("Terjadi kesalahan server saat memperbarui.");
+      setIsSubmitting(false);
+    }
   };
 
   if (loading) {
-    return <div className="empty-state">Memuat data materi...</div>;
+    return <EmptyState message="Memuat data materi dari database..." />;
   }
 
   if (notFound) {
     return (
       <>
-        <div className="chip-title-wrapper">
-          <div className="chip-title">Materi Tidak Ditemukan</div>
-        </div>
+        <ChipTitle title="Materi Tidak Ditemukan" />
         <div className="empty-state">
-          Materi dengan ID tersebut tidak ditemukan.{" "}
-          <button
-            onClick={() => router.push("/")}
-            className="btn-action-delete"
-            style={{ marginLeft: 8 }}
-          >
+          Materi dengan ID tersebut tidak ditemukan di database.{" "}
+          <Link href="/materi" className="btn-action-edit" style={{ marginLeft: 8 }}>
             Kembali ke Daftar
-          </button>
+          </Link>
         </div>
       </>
     );
@@ -85,15 +95,10 @@ function EditMateriContent({
 
   return (
     <>
-      {/* Chip Judul Halaman */}
-      <div className="chip-title-wrapper">
-        <div className="chip-title">Edit Materi</div>
-      </div>
+      <ChipTitle title="Edit Materi" />
 
-      {/* Form Edit Materi */}
       <div className="form-card">
         <form onSubmit={handleSubmit}>
-          {/* Field Judul Materi */}
           <div className="form-group">
             <label htmlFor="judul" className="form-label">
               Judul Materi
@@ -114,7 +119,6 @@ function EditMateriContent({
             {errorJudul && <span className="error-feedback">{errorJudul}</span>}
           </div>
 
-          {/* Field Deskripsi */}
           <div className="form-group">
             <label htmlFor="deskripsi" className="form-label">
               Deskripsi
@@ -136,14 +140,13 @@ function EditMateriContent({
             )}
           </div>
 
-          {/* Tombol Simpan */}
           <button
             type="submit"
             id="btn-simpan"
-            className={`btn-simpan ${isFormValid ? "is-active" : ""}`}
-            disabled={!isFormValid}
+            className={`btn-simpan ${isFormValid && !isSubmitting ? "is-active" : ""}`}
+            disabled={!isFormValid || isSubmitting}
           >
-            SIMPAN
+            {isSubmitting ? "MENYIMPAN..." : "SIMPAN"}
           </button>
         </form>
       </div>
@@ -157,8 +160,10 @@ export default function EditMateriPage({
   params: Promise<{ id: string }>;
 }) {
   return (
-    <Suspense fallback={<div className="empty-state">Memuat form edit...</div>}>
-      <EditMateriContent params={params} />
-    </Suspense>
+    <AuthGuard>
+      <Suspense fallback={<EmptyState message="Memuat form edit..." />}>
+        <EditMateriContent params={params} />
+      </Suspense>
+    </AuthGuard>
   );
 }

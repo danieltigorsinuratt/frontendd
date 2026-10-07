@@ -13,6 +13,11 @@
   --color-input-bg: #FCF8ED;
   --color-input-border: #7B6F6F;
   --color-placeholder: #8C8282;
+
+  /* Card Colors */
+  --color-card-purple: #E2DBFC;
+  --color-card-pink: #FCDDEC;
+  --color-card-blue: #D4EFFC;
 }
 
 * {
@@ -25,7 +30,7 @@ html, body {
   width: 100%;
   min-height: 100vh;
   background-color: var(--bg-page);
-  font-family: var(--font-fredoka), 'Fredoka', 'Baloo 2', cursive, sans-serif;
+  font-family: var(--font-fredoka), 'Fredoka', 'Baloo 2', 'Nunito', cursive, sans-serif;
   color: var(--color-dark);
   -webkit-font-smoothing: antialiased;
 }
@@ -56,8 +61,8 @@ html, body {
 }
 
 .navbar-brand-logo {
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   border: 2px solid #F5C968;
   display: flex;
@@ -66,6 +71,7 @@ html, body {
   background: #FFFFFF;
   overflow: hidden;
   flex-shrink: 0;
+  text-decoration: none;
 }
 
 .navbar-brand-logo img {
@@ -161,7 +167,7 @@ html, body {
 }
 
 /* --------------------------------------------------------------------------
-   Tombol Tambah Materi
+   Tombol Tambah Action
    -------------------------------------------------------------------------- */
 .action-bar {
   display: flex;
@@ -191,7 +197,228 @@ html, body {
 }
 
 /* --------------------------------------------------------------------------
-   Daftar Materi (Index)
+   Login Page
+   -------------------------------------------------------------------------- */
+.login-wrapper {
+  min-height: calc(100vh - 80px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 430px;
+  background-color: #FCDDEC;
+  border-radius: 24px;
+  padding: 36px 36px 40px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.login-logo-container {
+  margin-bottom: 16px;
+}
+
+.login-logo-circle {
+  width: 82px;
+  height: 82px;
+  border-radius: 50%;
+  border: 2.5px solid #F5C968;
+  background-color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.login-logo-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.login-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-dark);
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.login-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.login-form-group {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.login-label {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-dark);
+}
+
+.login-input {
+  width: 100%;
+  background-color: #FCF8ED;
+  border: 1px solid var(--color-input-border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-dark);
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease;
+}
+
+.login-input:focus {
+  border-color: var(--color-pink);
+}
+
+.login-input::placeholder {
+  color: var(--color-placeholder);
+  font-weight: 400;
+}
+
+.btn-login {
+  width: 100%;
+  margin-top: 10px;
+  padding: 13px 20px;
+  border-radius: 10px;
+  border: none;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #FFFFFF;
+  background-color: var(--color-gray-disabled);
+  cursor: not-allowed;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+  box-sizing: border-box;
+}
+
+.btn-login.is-active {
+  background-color: var(--color-pink);
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(239, 59, 115, 0.4);
+}
+
+.btn-login.is-active:hover {
+  background-color: var(--color-pink-hover);
+  transform: translateY(-1px);
+}
+
+.login-error-alert {
+  width: 100%;
+  background-color: #FDE8E8;
+  border: 1px solid #F8B4B4;
+  color: #9B1C1C;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+/* --------------------------------------------------------------------------
+   Dashboard Grid & Stat Cards
+   -------------------------------------------------------------------------- */
+.dashboard-grid {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.dashboard-row-top {
+  width: 100%;
+  display: flex;
+  gap: 28px;
+  justify-content: center;
+}
+
+.dashboard-row-bottom {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.stat-card {
+  flex: 1;
+  max-width: 440px;
+  min-height: 180px;
+  border-radius: 20px;
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+}
+
+.stat-card-purple {
+  background-color: var(--color-card-purple);
+}
+
+.stat-card-pink {
+  background-color: var(--color-card-pink);
+}
+
+.stat-card-blue {
+  background-color: var(--color-card-blue);
+}
+
+.stat-icon-wrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.stat-card-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-dark);
+  margin-bottom: 6px;
+}
+
+.stat-card-count {
+  font-size: 34px;
+  font-weight: 800;
+  color: var(--color-dark);
+  line-height: 1;
+}
+
+/* --------------------------------------------------------------------------
+   Daftar Materi, Soal, & User Cards
    -------------------------------------------------------------------------- */
 .materials-list {
   width: 100%;
@@ -204,7 +431,7 @@ html, body {
   width: 100%;
   background-color: var(--color-card-bg);
   border-radius: 14px;
-  padding: 14px 28px;
+  padding: 16px 28px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -229,6 +456,69 @@ html, body {
   flex-shrink: 0;
 }
 
+/* Soal Card Specific */
+.soal-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.soal-card-question {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-dark);
+}
+
+.soal-card-materi {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-gray-menu);
+}
+
+.soal-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-shrink: 0;
+}
+
+.pill-jawaban {
+  background-color: #FFFFFF;
+  color: var(--color-dark);
+  font-size: 14px;
+  font-weight: 700;
+  padding: 6px 18px;
+  border-radius: 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* User Card Specific */
+.user-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.user-card-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-dark);
+}
+
+.user-card-school {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-gray-menu);
+}
+
+.user-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-shrink: 0;
+}
+
+/* Action Buttons inside Card */
 .btn-action-edit {
   font-size: 15px;
   font-weight: 700;
@@ -256,6 +546,7 @@ html, body {
   opacity: 0.8;
 }
 
+/* Empty State */
 .empty-state {
   width: 100%;
   background-color: var(--color-card-bg);
@@ -363,7 +654,7 @@ textarea.form-control {
 }
 
 /* --------------------------------------------------------------------------
-   Flash Message / Alert
+   Flash Message / Alert Toast
    -------------------------------------------------------------------------- */
 .alert-success {
   width: 100%;
@@ -376,6 +667,103 @@ textarea.form-control {
   font-weight: 600;
   margin-bottom: 16px;
   box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.alert-close-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1E6B3B;
+  cursor: pointer;
+  padding: 0 4px;
+}
+
+/* --------------------------------------------------------------------------
+   Custom Modal Dialog
+   -------------------------------------------------------------------------- */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.modal-container {
+  background-color: #FFFFFF;
+  border-radius: 20px;
+  padding: 28px 32px;
+  max-width: 440px;
+  width: 100%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  border: 2px solid var(--color-card-bg);
+}
+
+.modal-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-dark);
+  margin-bottom: 10px;
+}
+
+.modal-message {
+  font-size: 15px;
+  color: #575050;
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.btn-modal-cancel {
+  background-color: #EDEAE1;
+  color: var(--color-dark);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.btn-modal-cancel:hover {
+  opacity: 0.85;
+}
+
+.btn-modal-confirm {
+  background-color: var(--color-pink);
+  color: #FFFFFF;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(239, 59, 115, 0.3);
+  transition: background-color 0.15s ease;
+}
+
+.btn-modal-confirm:hover {
+  background-color: var(--color-pink-hover);
 }
 
 /* --------------------------------------------------------------------------
@@ -423,5 +811,24 @@ textarea.form-control {
 
   .form-card {
     padding: 20px 16px 16px;
+  }
+
+  .dashboard-row-top {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .stat-card {
+    max-width: 100%;
+  }
+
+  .material-card {
+    padding: 14px 18px;
+  }
+
+  .soal-card-actions {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
   }
 }

@@ -2,100 +2,89 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
-import { Suspense } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { Suspense, useState } from "react";
+import { logoutAdmin } from "../../lib/auth";
+import ConfirmModal from "./partials/ConfirmModal";
 
 function NavbarContent() {
   const pathname = usePathname();
+  const router = useRouter();
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
-  const isMateriActive =
-    pathname === "/" ||
-    pathname.startsWith("/materi") ||
-    pathname.startsWith("/admin/materi");
+  // Jangan render navbar di halaman login
+  if (pathname === "/login") {
+    return null;
+  }
 
-  const handleLogout = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (confirm("Apakah Anda yakin ingin keluar?")) {
-      window.location.href = "/";
-    }
+  const isDashboardActive = pathname === "/dashboard";
+  const isMateriActive = pathname.startsWith("/materi");
+  const isSoalActive = pathname.startsWith("/soal");
+  const isUserActive = pathname.startsWith("/user");
+
+  const handleConfirmLogout = () => {
+    logoutAdmin();
+    setShowLogoutModal(false);
+    router.replace("/login");
   };
 
   return (
-    <nav className="navbar-wrapper">
-      <div className="navbar-left">
-        <div className="navbar-brand-logo">
-          <Image
-            src="/images/logo-mathventure.png"
-            alt="Logo MathVenture"
-            width={44}
-            height={44}
-            priority
-          />
+    <>
+      <nav className="navbar-wrapper">
+        <div className="navbar-left">
+          <Link href="/dashboard" className="navbar-brand-logo">
+            <Image
+              src="/images/logo-mathventure.png"
+              alt="Logo MathVenture"
+              width={44}
+              height={44}
+              priority
+            />
+          </Link>
+          <ul className="navbar-menu">
+            <li className={`navbar-menu-item ${isDashboardActive ? "active" : ""}`}>
+              <Link href="/dashboard">Dashboard</Link>
+            </li>
+            <li className={`navbar-menu-item ${isMateriActive ? "active" : ""}`}>
+              <Link href="/materi">Kelola Materi</Link>
+            </li>
+            <li className={`navbar-menu-item ${isSoalActive ? "active" : ""}`}>
+              <Link href="/soal">Kelola Soal</Link>
+            </li>
+            <li className={`navbar-menu-item ${isUserActive ? "active" : ""}`}>
+              <Link href="/user">Kelola User</Link>
+            </li>
+          </ul>
         </div>
-        <ul className="navbar-menu">
-          <li className="navbar-menu-item">
-            <Link href="#">Dashboard</Link>
-          </li>
-          <li className={`navbar-menu-item ${isMateriActive ? "active" : ""}`}>
-            <Link href="/">Kelola Materi</Link>
-          </li>
-          <li className="navbar-menu-item">
-            <Link href="#">Kelola Soal</Link>
-          </li>
-          <li className="navbar-menu-item">
-            <Link href="#">Kelola User</Link>
-          </li>
-        </ul>
-      </div>
-      <div className="navbar-right">
-        <form onSubmit={handleLogout} style={{ display: "inline" }}>
-          <button type="submit" className="btn-keluar">
+        <div className="navbar-right">
+          <button
+            type="button"
+            className="btn-keluar"
+            onClick={() => setShowLogoutModal(true)}
+          >
             Keluar
           </button>
-        </form>
-      </div>
-    </nav>
+        </div>
+      </nav>
+
+      {/* Modal Konfirmasi Logout */}
+      <ConfirmModal
+        isOpen={showLogoutModal}
+        title="Konfirmasi Keluar"
+        message="Apakah Anda yakin ingin keluar dari Admin Panel MathVenture?"
+        confirmLabel="Ya, Keluar"
+        cancelLabel="Batal"
+        isDanger={true}
+        onConfirm={handleConfirmLogout}
+        onCancel={() => setShowLogoutModal(false)}
+      />
+    </>
   );
 }
 
 export default function Navbar() {
   return (
-    <Suspense
-      fallback={
-        <nav className="navbar-wrapper">
-          <div className="navbar-left">
-            <div className="navbar-brand-logo">
-              <Image
-                src="/images/logo-mathventure.png"
-                alt="Logo MathVenture"
-                width={44}
-                height={44}
-                priority
-              />
-            </div>
-            <ul className="navbar-menu">
-              <li className="navbar-menu-item">
-                <Link href="#">Dashboard</Link>
-              </li>
-              <li className="navbar-menu-item active">
-                <Link href="/">Kelola Materi</Link>
-              </li>
-              <li className="navbar-menu-item">
-                <Link href="#">Kelola Soal</Link>
-              </li>
-              <li className="navbar-menu-item">
-                <Link href="#">Kelola User</Link>
-              </li>
-            </ul>
-          </div>
-          <div className="navbar-right">
-            <button type="button" className="btn-keluar">
-              Keluar
-            </button>
-          </div>
-        </nav>
-      }
-    >
+    <Suspense fallback={null}>
       <NavbarContent />
     </Suspense>
   );
